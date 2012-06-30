@@ -16,4 +16,4 @@ TODO/Planned Features
 - Hide links when javascript is disabled
 - Tooltip when first clicked hide or show
 - Strikethrough category name when hidden
-- Test with hierarchical categories
+- Notify when can't unhide child due to hidden parent

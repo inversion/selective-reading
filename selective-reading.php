@@ -19,11 +19,14 @@ class SelectiveReading {
 
 	/**
 	 * Add show/hide javascript links to the categories list, based on the state of the cookie
-	 * TODO: Test with hierarchical categories
 	 */
 	public static function edit_categories_list($content) {
 		$dom = new DOMDocument();
 		$dom->loadHTML($content);
+		
+		// Track if any categories have been hidden
+		$anyHidden = false;
+		
 		$listItems = $dom->getElementsByTagName('li');
 		foreach($listItems as $item) {
 			// Find the category ID from the class of the list element
@@ -32,11 +35,24 @@ class SelectiveReading {
 			
 			// Create the link to show or hide the element
 			$currentState = SelectiveReading::get_state($categoryID);
+			$anyHidden = $anyHidden || !$currentState;
+			
 			$showHideLink = $dom->createElement( 'a', $currentState ? '(hide)' : '(show)' );
 			$showHideLink->setAttribute( 'onclick', 'wp_selective_reading_set_category_state(' . $categoryID . ', ' . ($currentState ? '0' : '1') .');' );
 			$showHideLink->setAttribute( 'class', 'wp-selective-reading-toggle-' . $categoryID );
 			$item->appendChild( $showHideLink );
 		}
+		
+		// Add 'show all' link only if one or more categories are hidden
+		if( $anyHidden ) {
+			$showAllItem = $dom->createElement( 'li', '' );
+			$showAllItem->setAttribute( 'class', 'cat-item' );
+			$showAllLink = $dom->createElement( 'a', '(show all)' );
+			$showAllLink->setAttribute( 'onclick', 'wp_selective_reading_clear_cookies();' );
+			$showAllItem->appendChild( $showAllLink );
+			$dom->appendChild( $showAllItem );
+		}
+		
 		$content = $dom->saveHTML();
 		return $content;
 	}
@@ -87,10 +103,25 @@ class SelectiveReading {
 	
 	/**
 	 * Returns the enabled or disabled state of a category, defaulting to enabled
+	 * Take into account parents' states
 	 */
 	private static function get_state($categoryID) {
-		$cookie = $_COOKIE[SelectiveReading::$cookieKey . $categoryID];
-		return is_null($cookie) ? true : $cookie;
+		// State in cookie, defaulting to enabled if unset
+		$cookieState = array_key_exists( SelectiveReading::$cookieKey . $categoryID, $_COOKIE ) ? $_COOKIE[SelectiveReading::$cookieKey . $categoryID] : true;
+
+		// Check if any parent categories are hidden
+		$ancestors = get_ancestors( $categoryID, 'category' );
+		$parentState = true;
+		foreach( $ancestors as $ancestorID ) {
+			$parentState = $parentState && array_key_exists( SelectiveReading::$cookieKey . $ancestorID, $_COOKIE ) ? $_COOKIE[SelectiveReading::$cookieKey . $ancestorID] : true;
+		}
+		
+		// If parent state is hidden and we have tried to show this category, reset it to hidden
+		if( !$parentState ) {
+			//SelectiveReading::set_cookie( $categoryID, false );
+		}
+		
+		return $parentState && $cookieState;
 	}
 }
 
