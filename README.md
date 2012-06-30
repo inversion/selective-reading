@@ -9,7 +9,7 @@ Features
 
 TODO/Planned Features
 =================
-- Reload post list after change of selection
+- AJAX Reload post list after change of selection
 - Better error checking
 - Autoformat code
 - Configuration for contents of show/hide etc.
