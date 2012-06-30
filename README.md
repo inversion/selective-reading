@@ -13,4 +13,7 @@ TODO/Planned Features
 - Better error checking
 - Autoformat code
 - Configuration for contents of show/hide etc.
-
+- Hide links when javascript is disabled
+- Tooltip when first clicked hide or show
+- Strikethrough category name when hidden
+- Test with hierarchical categories
