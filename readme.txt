@@ -30,6 +30,7 @@ TODO/Planned Features
 * Clearer indication of hierarchical hiding when hierarchical display is disabled?
 * Better error checking
 * Autoformat code
+* Support for WP super cache - does not currently function for unregistered users with this plugin enabled
 
 NB: Plugin only tested with version > 3.4. It quite possibly works with earlier versions.
 

@@ -56,7 +56,8 @@ class SelectiveReading {
 			$dom->appendChild( $showAllItem );
 		}
 		
-		$content = $dom->saveHTML();
+		// http://www.php.net/manual/en/domdocument.savehtml.php
+		$content = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $dom->saveHTML()));
 		return $content;
 	}
 
