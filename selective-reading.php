@@ -39,15 +39,18 @@ class SelectiveReading {
 			
 			$showHideLink = $dom->createElement( 'a', $currentState ? '(hide)' : '(show)' );
 			$showHideLink->setAttribute( 'onclick', 'wp_selective_reading_set_category_state(' . $categoryID . ', ' . ($currentState ? '0' : '1') .');' );
-			$showHideLink->setAttribute( 'class', 'wp-selective-reading-toggle-' . $categoryID );
-			$item->appendChild( $showHideLink );
+			$showHideLink->setAttribute( 'title', ($currentState ? 'Hide' : 'Show') . ' posts from this category.' );
+			$showHideLink->setAttribute( 'class', 'wp-selective-reading-toggle-' . $categoryID . ' wp-selective-reading-link' );
+			
+			$item->insertBefore( $showHideLink, $item->childNodes->item(2) );
 		}
 		
 		// Add 'show all' link only if one or more categories are hidden
 		if( $anyHidden ) {
 			$showAllItem = $dom->createElement( 'li', '' );
-			$showAllItem->setAttribute( 'class', 'cat-item' );
+			$showAllItem->setAttribute( 'class', 'cat-item wp-selective-reading-link' );
 			$showAllLink = $dom->createElement( 'a', '(show all)' );
+			$showAllLink->setAttribute( 'title', 'Show posts from all categories.' );
 			$showAllLink->setAttribute( 'onclick', 'wp_selective_reading_clear_cookies();' );
 			$showAllItem->appendChild( $showAllLink );
 			$dom->appendChild( $showAllItem );
@@ -68,6 +71,10 @@ class SelectiveReading {
 	
 	public static function enqueue_scripts() {
 		wp_enqueue_script( 'selective-reading', plugins_url() . '/selective-reading/selective-reading.js' );
+	}
+	
+	public static function enqueue_styles() {
+		wp_enqueue_style( 'selective-reading', plugins_url() . '/selective-reading/selective-reading.css' );
 	}
 	
 	/** 
@@ -113,7 +120,7 @@ class SelectiveReading {
 		$ancestors = get_ancestors( $categoryID, 'category' );
 		$parentState = true;
 		foreach( $ancestors as $ancestorID ) {
-			$parentState = $parentState && array_key_exists( SelectiveReading::$cookieKey . $ancestorID, $_COOKIE ) ? $_COOKIE[SelectiveReading::$cookieKey . $ancestorID] : true;
+			$parentState = $parentState && (array_key_exists( SelectiveReading::$cookieKey . $ancestorID, $_COOKIE ) ? $_COOKIE[SelectiveReading::$cookieKey . $ancestorID] : true);
 		}
 		
 		// If parent state is hidden and we have tried to show this category, reset it to hidden
@@ -121,13 +128,14 @@ class SelectiveReading {
 			//SelectiveReading::set_cookie( $categoryID, false );
 		}
 		
-		return $parentState && $cookieState;
+		return ($parentState && $cookieState);
 	}
 }
 
 // Don't use the plugin in the admin panel
 if( !is_admin() ) {
 	add_action( 'wp_enqueue_scripts', 'SelectiveReading::enqueue_scripts' );
+	add_action( 'wp_enqueue_scripts', 'SelectiveReading::enqueue_styles' );
 	add_filter( 'wp_list_categories', 'SelectiveReading::edit_categories_list' );
 	add_action( 'pre_get_posts', 'SelectiveReading::edit_displayed_categories' );
 }
