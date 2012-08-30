@@ -48,6 +48,12 @@ None
 
 == Changelog ==
 
+= 0.3 =
+* Fixed problem with UTF-8 characters displaying incorrectly in category titles.
+
+= 0.2 =
+* Fixes minor issue with extraneous html and body tags being generated around categories widget
+
 = 0.1 =
 * Category widget is updated with show/hide links for each category
 * Works for unregistered users (using cookies)
@@ -57,4 +63,7 @@ None
 
 = 0.1 =
 * Initial version
+
+= 0.3 =
+* Fixed problem with UTF-8 characters displaying incorrectly in category titles.
 
