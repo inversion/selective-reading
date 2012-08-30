@@ -22,7 +22,9 @@ class SelectiveReading {
 	 */
 	public static function edit_categories_list($content) {
 		$dom = new DOMDocument();
-		$dom->loadHTML($content);
+        // Thanks to http://www.php.net/manual/en/domdocument.loadhtml.php#74777 for this UTF-8 fix
+        $encodedContent = mb_convert_encoding($content, 'HTML-ENTITIES', "UTF-8");
+        $dom->loadHTML($encodedContent);
 		
 		// Track if any categories have been hidden
 		$anyHidden = false;
