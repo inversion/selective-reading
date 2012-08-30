@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Selective_reading
- * @version 0.2
+ * @version 0.3
  */
 /*
 Plugin Name: Selective Reading
 Plugin URI: http://wordpress.org/extend/plugins/selective-reading/
 Description: Simple plugin to allow website visitors to deselect categories they don't want to see. Works for unregistered users (using cookies).
 Author: Andrew Moss
-Version: 0.2
+Version: 0.3
 Author URI: http://www.amoss.me.uk/
 */
 
