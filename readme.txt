@@ -2,7 +2,7 @@
 Contributors: mosseh
 Tags: categories, exclude, visitor, visitors, hide, exclude categories, hide categories
 Requires at least: 3.4
-Tested up to: 3.4
+Tested up to: 3.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,8 +31,6 @@ TODO/Planned Features
 * Better error checking
 * Autoformat code
 * Support for WP super cache - does not currently function for unregistered users with this plugin enabled
-
-NB: Plugin only tested with version > 3.4. It quite possibly works with earlier versions.
 
 == Installation ==
 1. Copy the selective-reading folder to the `/wp-content/plugins/` directory
